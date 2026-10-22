@@ -31,9 +31,14 @@ public class StudentController {
 
     // Create a student
     @PostMapping
-    public Student createStudent(@RequestBody Student student) {
-        student.setId(null);
-        return studentRepository.save(student);
+    public ResponseEntity<Student> createStudent(@RequestBody Student student) {
+    if (student.getName() == null || student.getName().isBlank()
+            || student.getEmail() == null || student.getEmail().isBlank()) {
+        return ResponseEntity.badRequest().build();
+    }
+
+    student.setId(null);
+    return ResponseEntity.ok(studentRepository.save(student));
     }
 
     // Update a student
