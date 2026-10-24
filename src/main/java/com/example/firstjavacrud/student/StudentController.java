@@ -41,11 +41,18 @@ public class StudentController {
     return ResponseEntity.ok(studentRepository.save(student));
     }
 
-    // Update a student
+   // Update a student
     @PutMapping("/{id}")
     public ResponseEntity<Student> updateStudent(
             @PathVariable Long id,
             @RequestBody Student updatedStudent) {
+
+        if (updatedStudent.getName() == null
+                || updatedStudent.getName().isBlank()
+                || updatedStudent.getEmail() == null
+                || updatedStudent.getEmail().isBlank()) {
+            return ResponseEntity.badRequest().build();
+        }
 
         return studentRepository.findById(id)
                 .map(student -> {
@@ -56,6 +63,7 @@ public class StudentController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    
     // Delete a student
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteStudent(@PathVariable Long id) {
